@@ -6,6 +6,6 @@
   </a>
 </p>
 
- - In this repo, you can find out the fies, datasets, diagrams and presentations on the first [MLSecOps in Action Course](https://m-fozouni.ir/mlsecops) by Dr. Mohammad Fozouni.
+ - In this repo, you can find out the files, datasets, diagrams and presentations on the first [MLSecOps in Action Course](https://m-fozouni.ir/mlsecops) by Dr. Mohammad Fozouni.
 
  - Feel free to join us and enjoy learning one of the best fields in the thech industry!
