@@ -11,7 +11,7 @@
  - Feel free to join us and enjoy learning one of the best fields in the thech industry!
 
 
-## MLSecOps in Action: Titles of Coimg Sessions
+## MLSecOps in Action: Titles of Coming Sessions
 
 In this course we will cover the following sessions and topics:
 
