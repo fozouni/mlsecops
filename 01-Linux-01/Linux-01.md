@@ -8,7 +8,7 @@
 2. Select in the upcoming dialog the two check boxes for ***Windows Subsystem for Linux*** and for ***Virtual Machine Platform*** and press the *OK* button. Applying the changes may take a few minutes. Finally, press the *Restart now* button to reboot the computer.
 3. On some Windows installations WSL must be updated, before the Linux distribution can be installed. We recommend therefore to open a command window and enter the command: **`wsl --update`** to update the WSL. Finally, reboot the computer. after the update is finished.
 
-> ✅ Stronlgy Recommend to Install [(New) PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell).
+> ✅ Strongly Recommend to Install [(New) PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell).
 
 🔗 [Reference](https://www.ridom.de/u/Windows_Subsystem_For_Linux.html)
 
@@ -141,7 +141,7 @@ cat file1.txt file2.txt
 #concatenate two files and save it as a new file called combined_files.txt with `>` operator, which is used for output redirection
 cat file1.txt file2.txt > combined_files.txt
 
-#add additional.txt content at the end of existing.txt file, `>>` operator is used for appending output.
+# add additional.txt content at the end of existing.txt file, `>>` operator is used for appending output.
 cat additional.txt >> existing.txt
 ```
 
@@ -172,11 +172,14 @@ echo "My name is $name" > text.txt
 
 • man is an interface to the on-line reference manuals, it is used to display the manual pages (documentation) for various commands, programs, and system functions
 • It provides detailed information about command usage, options, syntax, and examples
-**Example:**
+**Example: ** 
 
 ```bash
 #display manual page for the `find` command
 man find
+
+- ===> hyphen
+-- ===> dash
 ```
 
 
@@ -216,8 +219,8 @@ ls path/to/Directory1 path/to/Directory2
 # print current location
 pwd
 
-#to print current location
-echo "Your current location is: $(pwd)”
+# to print current location
+echo "Your current location is: $(pwd)"
 ```
 
 
@@ -388,11 +391,23 @@ history -c
 
 Every actions has an special number as follows:
 
-- read = 4
+- read = 4 ===> r
 
-- write = 2
+- write = 2 ===> w
 
-- execute = 1
+- execute = 1 ===> x
+
+  ```bash
+  amin@Mohammad-Fozouni:~$ chmod 646 script_mlflow.sh
+  amin@Mohammad-Fozouni:~$ ls -l
+  total 12
+  drwxr-xr-x 2 amin amin 4096 Jul 26 19:06 files
+  drwxr-xr-x 3 amin amin 4096 Jul 26 14:37 ml_models
+  -rw-r--rw- 1 amin amin    3 Aug  3 11:00 script_mlflow.sh
+  rw-r--rw- == rw-, r--, rw- ===> 646
+  ```
+
+  
 
 **Examples:**
 
@@ -403,7 +418,7 @@ chmod +x script.sh
 # Set read and write permissions for the owner, and read-only permissions for others on the file.txt
 chmod 644 file.txt 
 
-#Recursively set full permissions (read, write, execute) for all users on the directory and its contents
+# Recursively set full permissions (read, write, execute) for all users on the directory and its contents
 chmod -R 777 directory
 ```
 
