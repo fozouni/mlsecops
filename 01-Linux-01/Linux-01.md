@@ -7,12 +7,12 @@
 1. Right-click on the Windows Start menu icon, choose *Search* and type ***Windows Features***. Select the top entry (category *Control panel*) to enable or turn off Windows-Features. The Windows-Features dialog will be opened.
 2. Select in the upcoming dialog the two check boxes for ***Windows Subsystem for Linux*** and for ***Virtual Machine Platform*** and press the *OK* button. Applying the changes may take a few minutes. Finally, press the *Restart now* button to reboot the computer.
 3. On some Windows installations WSL must be updated, before the Linux distribution can be installed. We recommend therefore to open a command window and enter the command: **`wsl --update`** to update the WSL. Finally, reboot the computer. after the update is finished.
+🔗 [Reference](https://www.ridom.de/u/Windows_Subsystem_For_Linux.html)
 
 > ✅ Strongly Recommend to Install [(New) PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell).
 > 
 > ✅ Strongly Recommend to Install *Windows Terminal* from Microsoft Store, exactly like mine.
 
-🔗 [Reference](https://www.ridom.de/u/Windows_Subsystem_For_Linux.html)
 
 ![](.\Screens\Windws-Feature.png)
 
