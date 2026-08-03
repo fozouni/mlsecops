@@ -9,6 +9,8 @@
 3. On some Windows installations WSL must be updated, before the Linux distribution can be installed. We recommend therefore to open a command window and enter the command: **`wsl --update`** to update the WSL. Finally, reboot the computer. after the update is finished.
 
 > ✅ Strongly Recommend to Install [(New) PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell).
+> 
+> ✅ Strongly Recommend to Install *Windows Terminal* from Microsoft Store, exactly like mine.
 
 🔗 [Reference](https://www.ridom.de/u/Windows_Subsystem_For_Linux.html)
 
