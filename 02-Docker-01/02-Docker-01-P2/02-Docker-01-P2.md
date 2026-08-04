@@ -17,8 +17,15 @@ In the `setting > docker engine` path set the following item:
 > Mine 👇👇👇
 >
 > ```bash
->   "registry-mirrors": [
->     "https://docker.iranserver.com"
+> "registry-mirrors": [
+>  "https://docker.iranserver.com"
+> ]
+> 
+> # or you can use both as follows
+> 
+> "registry-mirrors": [
+>     "https://docker.iranserver.com",
+>     "https://docker.arvancloud.ir/"
 >   ]
 > ```
 
