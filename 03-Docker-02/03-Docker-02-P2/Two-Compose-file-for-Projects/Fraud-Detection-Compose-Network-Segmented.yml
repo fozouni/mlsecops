@@ -1,0 +1,166 @@
+services:
+  # ============================================
+  # PUBLIC SERVICES - Accessible from outside
+  # ============================================
+  
+  kafka-ui:
+    container_name: kafka-ui
+    image: docker.arvancloud.ir/provectuslabs/kafka-ui:v0.7.2
+    ports:
+      - "9090:8080"  # ✅ External access via localhost:9090 SERVER_IP:9090
+    networks:
+      - frontend-network
+      - backend-network  # Needs to talk to Kafka
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka:9092'
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: connect
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: 'http://schema-registry:8081'
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: 'http://connect:8083'
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    depends_on:
+      - kafka
+      - connect
+      - schema-registry
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:11.4.0
+    ports:
+      - "3000:3000"  # ✅ External access via localhost:3000
+    networks:
+      - frontend-network
+      - backend-network  # Needs to query data sources
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./grafana-storage:/var/lib/grafana
+
+  # ============================================
+  # INTERNAL SERVICES - NO external access
+  # ============================================
+  
+  zookeeper:
+    image: debezium/zookeeper:3.0.0.Final
+    container_name: zookeeper
+    # ❌ NO PORTS - Completely internal
+    networks:
+      - backend-network
+    # Only accessible internally as zookeeper:2181
+
+  kafka:
+    image: debezium/kafka:3.0.0.Final
+    container_name: kafka
+    # ❌ NO PORTS - Completely internal
+    networks:
+      - backend-network
+    environment:
+      - ZOOKEEPER_CONNECT=zookeeper:2181
+    depends_on:
+      - zookeeper
+    # Only accessible internally as kafka:9092
+
+  mysql:
+    image: debezium/example-mysql:3.0.0.Final
+    container_name: mysql
+    # ❌ NO PORTS - Completely internal
+    networks:
+      - backend-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=debezium
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqlpw
+    # Only accessible internally as mysql:3306
+
+  postgres:
+    image: debezium/postgres:16
+    container_name: postgres
+    # ❌ NO PORTS - Completely internal
+    networks:
+      - backend-network
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    # Only accessible internally as postgres:5432
+
+  connect:
+    image: debezium/connect:3.0.0.Final
+    container_name: connect
+    # ❌ NO PORTS - Completely internal
+    networks:
+      - backend-network
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+    depends_on:
+      - kafka
+      - mysql
+      - postgres
+    # Only accessible internally as connect:8083
+
+  schema-registry:
+    container_name: schema-registry
+    image: confluentinc/cp-schema-registry:7.5.1
+    # ❌ NO PORTS - Completely internal
+    networks:
+      - backend-network
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:9092'
+      SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8081'
+    depends_on:
+      - kafka
+    # Only accessible internally as schema-registry:8081
+
+  spark:
+    image: bitnami/spark:F3
+    container_name: spark
+    # ❌ NO PORTS - Completely internal
+    networks:
+      - backend-network
+      - data-network
+    environment:
+      - SPARK_MODE=master
+    # Only accessible internally as spark:8080 or spark:7077
+
+  redis:
+    image: redis:7.4.1
+    container_name: redis
+    # ❌ NO PORTS - Completely internal
+    networks:
+      - backend-network
+      - cache-network
+    # Only accessible internally as redis:6379
+
+# ============================================
+# NETWORK DEFINITIONS
+# ============================================
+
+networks:
+  frontend-network:
+    driver: bridge
+    # For services that need to be exposed externally
+    
+  backend-network:
+    driver: bridge
+    # For core data services - completely isolated
+    
+  data-network:
+    driver: bridge
+    # For data processing services
+    
+  cache-network:
+    driver: bridge
+    # For caching services
+
+volumes:
+  grafana-storage:
+
+  # docker network inspect backend-network
+  # will give us good understanding of this stack and networks
