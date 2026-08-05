@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    ports:
+      - "${APP_PORT}:5000"
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+    volumes:
+      - .:/code
+
+  redis:
+    image: redis:alpine
