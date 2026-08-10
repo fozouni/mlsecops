@@ -8,7 +8,7 @@ docker build `
 # or
 
 docker buildx build `
-	--secret id=api_key,src=api_key.txt `  #gitleaks:allow
+	--secret id=api_key,src=api_key.txt `
 	-t securex .  
 ```
 
