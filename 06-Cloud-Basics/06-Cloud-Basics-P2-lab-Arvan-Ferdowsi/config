@@ -1,5 +1,5 @@
 Host mlsecops
-    HostName 193.39.169.90
+    HostName PUT-HERE-YOUR-SERVER-IP
     User ubuntu
     Port 22
     IdentityFile ~/.ssh/id_ed25519
