@@ -3,7 +3,7 @@ title = "gitleaks config"
 [extend]
 useDefault = true
 
-[[allowlist]]
+[allowlist]
 description = "Ignore known false positives"
 fingerprints = [
   "d61fdccbcef9da6e8b82baef21069a39e78f9a06:04-Docker-03/Dockerfile-Examples/Good-Docker-Image/good-commands.md:generic-api-key:11",
