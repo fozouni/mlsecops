@@ -3,8 +3,15 @@ title = "gitleaks config"
 [extend]
 useDefault = true
 
-[allowlist]
-description = "Ignore known false positives"
+[[allowlists]]
+description = "Ignore known false positives in teaching examples"
+
+paths = [
+  '''04-Docker-03/Dockerfile-Examples/Good-Docker-Image/good-commands\.md''',
+  '''04-Docker-03/04-Docker-03-P2-and-P3/Dockerfile-Examples/Good-Docker-Image/good-commands\.md''',
+  '''04-Docker-03/Dockerfile-Examples/Bad-Docker-Images-2/commands\.md'''
+]
+
 fingerprints = [
   "d61fdccbcef9da6e8b82baef21069a39e78f9a06:04-Docker-03/Dockerfile-Examples/Good-Docker-Image/good-commands.md:generic-api-key:11",
   "742ab5e02e9c387bd4373d201b0e3ac71f84973b:04-Docker-03/04-Docker-03-P2-and-P3/Dockerfile-Examples/Good-Docker-Image/good-commands.md:generic-api-key:11",
@@ -13,10 +20,3 @@ fingerprints = [
   "d61fdccbcef9da6e8b82baef21069a39e78f9a06:04-Docker-03/Dockerfile-Examples/Bad-Docker-Images-2/commands.md:generic-api-key:28",
   "d61fdccbcef9da6e8b82baef21069a39e78f9a06:04-Docker-03/Dockerfile-Examples/Good-Docker-Image/good-commands.md:generic-api-key:5"
 ]
-
-# We can add more files as follows. Just get the fingerprints from the
-# gitleaks output and copy here.
-#[[allowlist]]
-#description = "Ignore another false positive"
-#fingerprints = [ "commit-hash:path/to/file:rule-id:line-number" ]
-
