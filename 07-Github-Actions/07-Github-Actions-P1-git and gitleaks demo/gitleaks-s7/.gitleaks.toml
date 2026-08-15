@@ -1,0 +1,12 @@
+title = "gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Ignore known false positives in teaching examples"
+
+paths = [
+  "commands.md",
+  "commands-2.md"
+]

@@ -1,0 +1,13 @@
+#!/bin/sh
+echo "Running gitleaks scan before push..."
+gitleaks detect --source . --verbose --redact
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Gitleaks found potential secrets. Push aborted."
+  echo "Fix or remove the secrets above before pushing."
+  exit 1
+fi
+
+echo "✅ No secrets found. Proceeding with push."
+exit 0
