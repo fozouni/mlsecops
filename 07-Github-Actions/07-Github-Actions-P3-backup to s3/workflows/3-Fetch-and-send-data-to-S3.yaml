@@ -1,0 +1,52 @@
+name: 3-Fetch-and-send-data-to-S3
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  fetch_data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
+
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Fetch data
+        run: |
+          TIMESTAMP=$(date +%s)
+          OUTPUT_FILE="stage/${TIMESTAMP}.csv"
+          mkdir -p stage
+          curl -s -H "User-Agent: Chrome/123.0" https://www.sahamyab.com/guest/twiter/list?v=0.1 | jq '.items[] | [.id, .sendTime, .sendTimePersian, .senderName, .senderUsername, .type, .content] | join(",") ' > $OUTPUT_FILE
+          echo "Data saved to $OUTPUT_FILE"
+
+     
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.10' 
+        
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run upload script
+        run: |
+          python send-to-object-storage.py
+        env:
+          ACCESS_KEY: ${{ secrets.S3_BUCKET_ACCESS_KEY }}
+          SECRET_KEY: ${{ secrets.S3_BUCKET_SECRET_ACCESS_KEY }}
+
+      - name: Commit and push changes
+        run: |
+            git config --local user.email "fozouni@hotmail.com"
+            git config --local user.name "fozouni"
+            git add stage/
+            git diff --staged --quiet || git commit -m "Fetch data at $(date)"
+            git push
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    

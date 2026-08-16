@@ -1,0 +1,54 @@
+name: 2-Simple-API-call
+
+on:
+  schedule:
+    - cron: '55 08 * * *'
+    - cron: '59 08 * * *'
+  workflow_dispatch:
+
+#🔴 Tehran is currently UTC+3:30
+
+
+jobs:
+  fetch_data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7 # v7.0.1
+        # Download the code of this repository onto the runner so the next steps can work with the files.
+        # uses: actions/checkout@full commit SHA of this version
+        # uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Fetch data
+        run: |
+          TIMESTAMP=$(date +%s)
+          OUTPUT_FILE="stage/${TIMESTAMP}.csv"
+          mkdir -p stage
+          curl -s -H "User-Agent: Chrome/123.0" \
+            "https://www.sahamyab.com/guest/twiter/list?v=0.1" \
+            | jq -r '.items[] | [.id, .sendTime, .sendTimePersian, .senderName, .senderUsername, .type, .content] | @csv' \
+            > "$OUTPUT_FILE"
+          echo "Data saved to $OUTPUT_FILE"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "fozouni@hotmail.com"
+          git config --local user.name "fozouni"
+          git add stage/
+          git diff --staged --quiet || git commit -m "Fetch data at $(date -u)"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+# ⛔ git diff --staged --quiet || git commit -m "Fetch data at $(date -u)"
+# 1-Check if there are any staged changes.
+# 2-If there are changes then create a commit.
+# 3-If there are no changes then do nothing (skip the commit).          

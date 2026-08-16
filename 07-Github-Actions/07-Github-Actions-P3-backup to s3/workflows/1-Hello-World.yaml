@@ -1,0 +1,23 @@
+name: 1-hello-world
+
+on:
+  # push:
+  workflow_dispatch:
+
+jobs:
+    first-job:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Print hello 
+              run: echo "Hello World"
+
+    second-job:
+        runs-on: ubuntu-latest
+        steps:
+             - name: Print Hi to you
+               run: echo "Hi to you" 
+
+             - name: Say Goodbye
+               run: echo "Goodbye"
+ 
+            

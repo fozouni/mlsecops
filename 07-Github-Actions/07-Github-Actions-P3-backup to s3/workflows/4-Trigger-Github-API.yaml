@@ -1,0 +1,43 @@
+name: 4-Trigger-Github-API
+
+on:
+    repository_dispatch:
+      types: [trigger-fetch-data] 
+      # You can choose any custom name you want (e.g. trigger-fetch-data, run-backup, sync-data, etc.)
+ 
+# 🔴🔴🔴🔴🔴🔴🔴🔴
+
+jobs:
+  fetch_data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
+
+
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Fetch data
+        run: |
+          TIMESTAMP=$(date +%s)
+          OUTPUT_FILE="stage/${TIMESTAMP}.csv"
+          mkdir -p stage
+          curl -s -H "User-Agent: Chrome/123.0" \
+            "https://www.sahamyab.com/guest/twiter/list?v=0.1" \
+            | jq -r '.items[] | [.id, .sendTime, .sendTimePersian, .senderName, .senderUsername, .type, .content] | @csv' \
+            > "$OUTPUT_FILE"
+          echo "Data saved to $OUTPUT_FILE"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "fozouni@hotmail.com"
+          git config --local user.name "fozouni"
+          git add stage/
+          git diff --staged --quiet || git commit -m "Fetch data at $(date -u)"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
