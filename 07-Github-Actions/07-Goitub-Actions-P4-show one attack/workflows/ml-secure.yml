@@ -1,0 +1,86 @@
+name: ML-Train-and-Publish-V2
+
+on:
+  pull_request:
+    branches: [main]
+  # The workflow will run when someone opens or updates a Pull Request targeting the main branch.  
+  # push:
+  #   branches: [main]
+  # ✅ Removed pull_request_target (dangerous trigger)
+
+permissions:
+  contents: read
+  #✅ contents: read means the workflow can only read the code, it cannot push or modify anything by default.
+  # This follows the principle of least privilege
+
+jobs:
+  train-and-publish:
+    name: Train Model and Publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # ✅ Explicit least privilege
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        # ✅ Using official action.
+        # You can use the commit SHA for your prodcution env as I told in the previous video.
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Train model
+        run: python train.py
+
+      #✅ put one step for security check is excellent
+      # If it finds any, it stops the workflow with an error.
+      - name: Security checks
+        run: |
+          # ✅ Reject dangerous pickle models
+          if find . -name "*.pkl" -o -name "*.pickle" | grep -q .; then
+            echo "::error::Pickle models are forbidden. Use SafeTensors only."
+            exit 1
+          fi
+          echo "✅ No pickle files found"
+
+          # ✅ Verify SafeTensors model exists
+          if [ ! -f model.safetensors ]; then
+            echo "::error::model.safetensors is missing"
+            exit 1
+          fi
+          echo "✅ model.safetensors found"
+          sha256sum model.safetensors
+
+      # ✅ Removed the dangerous step that interpolated PR title into the shell
+      # ✅ Secrets are never loaded in steps that process untrusted input
+
+      - name: Publish model (only on main)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "Publishing verified SafeTensors model..."
+          echo "Model published successfully"
+        #✅ This step only runs if:
+        # We are on the main branch and
+        # The event is a push (not a Pull Request)
+        # This prevents the secret (HF_TOKEN) from being available during Pull Requests from outsiders.  
+
+
+
+#####
+# 🤔 Are there any orgs in the work that still use of these dangerous workflows?
+
+# 🤯 Even in 2026, a large number of real repositories (including popular open-source and company projects)
+# still use dangerous patterns such as:
+
+# 1-pull_request_target with untrusted input
+# 2-Mutable tags (@v4, @v7) instead of pinned SHAs
+# 3-Missing or overly broad permissions
+# 4-Secrets available in steps that process PR data
+
+# 🤯 Security reports from 2026 (including Datadog and others)
+# still show that roughly 30–40% of organizations have at least one workflow vulnerable to these issues.

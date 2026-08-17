@@ -1,0 +1,50 @@
+name: ML-Train-and-Publish-V1
+
+on:
+  pull_request:
+    branches: [main]
+  # push:
+  #   branches: [main]
+  pull_request_target: #⛔ Dangerous trigger
+    types: [opened, synchronize]
+
+  #📝 pull_request_target runs the workflow with the permissions and secrets of the base repository,
+  # even when the Pull Request comes from a fork.  
+
+jobs:
+  train-and-publish:
+    name: Train Model and Publish
+    runs-on: ubuntu-latest
+    #⛔ No explicit permissions → uses default (often over-privileged)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        #⛔  Mutable tag (not pinned)
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Train model
+        run: python train.py
+
+      - name: Log PR information #⛔ this is dangerous, INDEED HORRIBLE 🤯
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "=== Pull Request Information ==="
+          echo "PR Title : ${{ github.event.pull_request.title }}"
+          echo "Head Ref : ${{ github.head_ref }}"
+          echo "================================"
+          
+        #⛔ The value {{ github.event.pull_request.title }} is inserted directly into the shell command.
+        # An attacker can put malicious commands in the PR title
+
+      - name: Publish model
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "Publishing model to Hugging Face..."
+          echo "Model published successfully"
