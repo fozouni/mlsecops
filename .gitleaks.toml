@@ -12,7 +12,8 @@ paths = [
   "04-Docker-03/Dockerfile-Examples/Bad-Docker-Images-2/commands.md",
   "07-Github-Actions/07-Github-Actions-P1-git and gitleaks demo/gitleaks-s7/commands-2.md",
   "07-Github-Actions/07-Github-Actions-P1-git and gitleaks demo/gitleaks-s7/commands.md",
-  "07-Github-Actions/07-Github-Actions-P3-backup to s3/Github API.md"
+  "07-Github-Actions/07-Github-Actions-P3-backup to s3/Github API.md",
+  "04-Docker-03/04-Docker-03-P2-and-P3/Dockerfile-Examples/Bad-Docker-Images-2/commands.md"
 
 ]
 

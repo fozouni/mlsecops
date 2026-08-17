@@ -1,0 +1,15 @@
+#!/bin/sh
+echo "Running gitleaks scan before commit..."
+
+# Scan entire repo (without --staged)
+gitleaks detect --source . --verbose --redact --no-git
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Gitleaks found potential secrets. Commit aborted."
+  echo "Fix or remove the secrets above before committing."
+  exit 1
+fi
+
+echo "✅ No secrets found. Proceeding with commit."
+exit 0

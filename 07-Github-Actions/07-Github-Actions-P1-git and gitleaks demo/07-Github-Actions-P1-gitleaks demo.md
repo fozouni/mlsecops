@@ -139,3 +139,9 @@ Now if there is not any problem, run `git push`.
 
 We can config `gitleaks` to check all local repo on our system. But at this moment, we only focus on the approach for each repo, not globally. 
 
+## ⛔ What Hapens if gitleaks detect a real token that we forgot to discard from our repo
+
+In this situation, if we commit our repo and find out that there is acritical token or secret on the repo, we should not push our repo. First of all, we must delete the latest commit that contains the file with hardcoded token. Then, after deleteing this secret, we can now push safely to github. 
+
+Note that we can use a file like `pre-push` on the `.git/hooks/` address named `pre-commit` that before commiting anything, will check and detect secrets for us. The file `pre-commit` is on the `gitleaks-s7` directory. Feel free to test this and enjoy the most possible security.
+
