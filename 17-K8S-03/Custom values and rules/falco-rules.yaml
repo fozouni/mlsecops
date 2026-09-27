@@ -1,0 +1,13 @@
+customRules:
+  custom-rules.yaml: |-
+    - rule: Write below /etc in container
+      desc: Detect any write to /etc inside a container
+      condition: >
+        (evt.type in (open,openat,openat2) and evt.is_open_write=true and fd.typechar='f' and fd.num>=0)
+        and fd.name startswith /etc
+        and container
+      output: >
+        File below /etc opened for writing
+        (file=%fd.name process=%proc.name container=%container.name pod=%k8s.pod.name)
+      priority: WARNING
+      tags: [filesystem, mitre_persistence]

@@ -1,0 +1,20 @@
+# talon-values.yaml
+config:
+  watchRules: true
+
+  rulesOverride: |
+    - action: Terminate Pod
+      actionner: kubernetes:terminate
+      parameters:
+        ignore_daemonsets: true
+        ignore_statefulsets: true
+        grace_period_seconds: 5
+
+    - rule: Terminal shell in container
+      match:
+        rules:
+          - Terminal shell in container
+        output_fields:
+          - k8s.ns.name!=kube-system, k8s.ns.name!=falco
+      actions:
+        - action: Terminate Pod
