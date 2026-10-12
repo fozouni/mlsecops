@@ -1,0 +1,27 @@
+stages:
+  create_dataset:
+    cmd: python create_dataset.py
+    deps:
+    - create_dataset.py
+    outs:
+    - data/dataset_parameters.yaml
+    - data/test.csv
+    - data/train.csv
+  train_model:
+    cmd: python train_model.py
+    deps:
+    - data/train.csv
+    - train_model.py
+    outs:
+    - models/SVC/model
+    - models/SVC/model_parameters.yaml
+  eval_model:
+    cmd: python eval_model.py
+    deps:
+    - data/test.csv
+    - eval_model.py
+    - models/SVC/model
+    outs:
+    - models/SVC/confusion_matrix.png
+    - models/SVC/feature_importances.png
+    - models/SVC/metrics.yaml

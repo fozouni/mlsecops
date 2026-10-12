@@ -1,0 +1,1 @@
+$WD=$pwd ; cd 'C:\virtual-envs\' ; .mlflow\Scripts\activate ; cd $WD
