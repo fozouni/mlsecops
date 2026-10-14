@@ -139,7 +139,7 @@ This requires deploying a server. ArvanCloud offers various compute services (e.
    
    # Start the MLflow Tracking Server
    mlflow server \
-       --backend-store-uri postgresql://mlflow_user:m/kEI58YmP/DtyRfIcbIl@localhost/mlflow_db \
+       --backend-store-uri postgresql+psycopg2://mlflow_user:m/kEI58YmP/DtyRfIcbIl@localhost/mlflow_db \
        --default-artifact-root s3://YOUR-BUCKET-NAME/mlflow_artifacts \
        --host 0.0.0.0 \
        --port 5000 \
