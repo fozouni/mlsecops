@@ -143,7 +143,8 @@ This requires deploying a server. ArvanCloud offers various compute services (e.
        --default-artifact-root s3://YOUR-BUCKET-NAME/mlflow_artifacts \
        --host 0.0.0.0 \
        --port 5000 \
-       --allowed-hosts "*"
+       --allowed-hosts "*" \
+       --cors-allowed-origins "http://YOUR-SERVER-IP:5000"
    ```
 
    - 🚩 `--host 0.0.0.0` makes the server accessible externally. Ensure your VM's firewall rules allow inbound traffic on port `5000`.
