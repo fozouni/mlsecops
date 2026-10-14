@@ -120,6 +120,14 @@ This requires deploying a server. ArvanCloud offers various compute services (e.
      CREATE USER mlflow_user WITH PASSWORD 'm/kEI58YmP/DtyRfIcbIl';
      
      GRANT ALL PRIVILEGES ON DATABASE mlflow_db TO mlflow_user;
+     
+     ALTER DATABASE mlflow_db OWNER TO mlflow_user;
+     
+     \c mlflow_db
+     
+     ALTER SCHEMA public OWNER TO mlflow_user;
+     
+     \q
      ```
 
 3. **Run MLflow Tracking Server:** On your ArvanCloud VM, run the MLflow server command:
