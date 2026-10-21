@@ -55,10 +55,10 @@ In this course we will cover the following sessions and topics:
   - 20-MLflow-01: Theory and Hello World
   - 21-MLflow-02: DVC for Data and Model Versioning
   - 22-MLflow-03: MLflow-DVC on Cloud
-  - 23-FastAPI-01: Model Serving Basics (APIs for ML Inference)
-  - 24-FastAPI-02: Securing Endpoint
-  - 25-MLflow-04: Secure Experiment Tracking (Signed Models)
-  - 26-Jenkins: Traefik-MLflow-DVC-Jenkins on the Cloud
+  - 23-MLflow-04: Secure Experiment Tracking (Signed Models)
+  - 24-Jenkins (Traefik-MLflow-DVC-Jenkins on the Cloud)
+  - 25-FastAPI-01: Model Serving Basics (APIs for ML Inference)
+  - 26-FastAPI-02: Securing Endpoint
 
 6️⃣ MLSec Tools
 
