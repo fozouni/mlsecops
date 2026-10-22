@@ -1,0 +1,16 @@
+stages:
+  create_dataset:
+    cmd: python3 create_dataset.py
+    deps:
+    - create_dataset.py
+    outs:
+    - data/dataset_parameters.yaml
+    - data/test.csv
+    - data/train.csv
+  train_model:
+    cmd: python3 train_model.py
+    deps:
+    - data/train.csv
+    - train_model.py
+    - model_hash.py
+

@@ -1,0 +1,79 @@
+http:
+  middlewares:
+    # 🚩 Basic auth for MLflow and Traefik (username: admin, password: jenkins)
+    # Generate new password hash with: htpasswd -nb admin jenkins
+    # or even better with: htpasswd -nbB admin jenkins
+    mlflow-auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$EMrFxGY.$gdArRneClxo2lIKco0LLb1"
+    
+    secure-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+        customResponseHeaders:
+          X-Frame-Options: "SAMEORIGIN"
+          X-Content-Type-Options: "nosniff"
+          Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+
+    dashboard-auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$EMrFxGY.$gdArRneClxo2lIKco0LLb1"
+
+  services:
+    jenkins:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:8080"
+    
+    mlflow:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:5000"
+
+  routers:
+    jenkins-http:
+      rule: "Host(`jenkins.elmedade.ir`)"
+      service: jenkins
+      entryPoints:
+        - web
+    
+    jenkins-https:
+      rule: "Host(`jenkins.elmedade.ir`)"
+      service: jenkins
+      middlewares:
+        - secure-headers
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+    
+    mlflow-http:
+      rule: "Host(`mlflow.elmedade.ir`)"
+      service: mlflow
+      entryPoints:
+        - web
+    
+    mlflow-https:
+      rule: "Host(`mlflow.elmedade.ir`)"
+      service: mlflow
+      middlewares:
+        - mlflow-auth
+        - secure-headers
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+    
+    dashboard-https:
+      rule: "Host(`traefik.elmedade.ir`)"
+      service: api@internal
+      middlewares:
+        - dashboard-auth
+        - secure-headers
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
