@@ -1,0 +1,1 @@
+$WD=$pwd ; cd 'C:\virtual-envs\' ; .fastapi\Scripts\activate ; cd $WD
