@@ -1,0 +1,82 @@
+http:
+  middlewares:
+    secure-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+        customResponseHeaders:
+          X-Frame-Options: "DENY"
+          X-Content-Type-Options: "nosniff"
+          Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+          Content-Security-Policy: "default-src 'none'; frame-ancestors 'none'"
+    
+    mlflow-auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$EMrFxGY.$gdArRneClxo2lIKco0LLb1"
+    
+    dashboard-auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$EMrFxGY.$gdArRneClxo2lIKco0LLb1"
+
+  services:
+    jenkins:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:8080"
+    
+    mlflow:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:5000"
+
+    ml-api:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:8000"
+
+  routers:
+    jenkins-https:
+      rule: "Host(`jenkins.elmedade.ir`)"
+      service: jenkins
+      middlewares:
+        - secure-headers
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+    
+    mlflow-https:
+      rule: "Host(`mlflow.elmedade.ir`)"
+      service: mlflow
+      middlewares:
+        - mlflow-auth
+        - secure-headers
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+    
+    dashboard-https:
+      rule: "Host(`traefik.elmedade.ir`)"
+      service: api@internal
+      middlewares:
+        - dashboard-auth
+        - secure-headers
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+    # 🚩--------------------------
+    # --- NEW FastAPI Router ---
+    ml-api-https:
+      rule: "Host(`api.elmedade.ir`)"
+      service: ml-api
+      middlewares:
+        - secure-headers
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
