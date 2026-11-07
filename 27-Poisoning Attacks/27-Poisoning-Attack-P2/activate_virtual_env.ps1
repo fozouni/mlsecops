@@ -1,0 +1,1 @@
+$WD=$pwd ; cd 'C:\virtual-envs\' ; .ART\Scripts\activate ; cd $WD
